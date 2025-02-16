@@ -12,7 +12,6 @@
   "dependencies": {
     "bootstrap": "^5.3.3",
     "firebase": "^11.3.1",
-    "modern-react-qr-reader": "^1.0.12",
     "qrcode.react": "^4.2.0",
     "react": "^19.0.0",
     "react-bootstrap": "^2.10.9",

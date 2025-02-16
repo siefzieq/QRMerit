@@ -1,64 +1,39 @@
-import React, { useState } from "react";
-import { QrReader } from "modern-react-qr-reader";
-import { db, ref, get, update } from "./firebase.js"; // Import Firebase functions
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import { db, ref, get, update } from './firebase'; 
 
 const QRScanner = () => {
-  const [scanResult, setScanResult] = useState(null);
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const studentId = searchParams.get('id');
+  const [message, setMessage] = useState('Processing...');
 
-  const handleScan = async (data) => {
-    if (!data) return;
-
-    console.log("Scanned Data:", data); // Debugging output
-
-    try {
-      const studentData = JSON.parse(data); // Parse QR code data
-      setScanResult(studentData);
-      
-      console.log("Parsed Data:", studentData); // Debugging output
-
-      const studentRef = ref(db, `students/${studentData.id}`);
-      const snapshot = await get(studentRef);
-
-      if (snapshot.exists()) {
-        const currentPoints = snapshot.val().points || 0;
-        const newPoints = currentPoints + 5;
-
-        console.log(`Updating ${studentData.name} points: ${currentPoints} → ${newPoints}`);
-
-        await update(studentRef, { points: newPoints });
-
-        alert(`✅ ${studentData.name} received +5 points!`);
-        
-        navigate("/"); // Redirect to DisplayData
-      } else {
-        alert("❌ Student not found in the database!");
-      }
-    } catch (error) {
-      console.error("QR Scan Error:", error);
-      alert("❌ Invalid QR Code format!");
+  useEffect(() => {
+    if (!studentId) {
+      setMessage("Invalid QR Code!");
+      return;
     }
-  };
+
+    const studentRef = ref(db, `students/${studentId}`);
+
+    get(studentRef).then((snapshot) => {
+      if (snapshot.exists()) {
+        const studentData = snapshot.val();
+        const newPoints = (studentData.points || 0) + 5;
+
+        update(studentRef, { points: newPoints }).then(() => {
+          setMessage(`✅ Points updated! ${studentData.name} now has ${newPoints} points.`);
+          setTimeout(() => navigate("/"), 3000); // Redirect to home after 3s
+        });
+      } else {
+        setMessage("❌ Student not found!");
+      }
+    }).catch(() => setMessage("❌ Error updating points!"));
+  }, [studentId, navigate]);
 
   return (
     <div>
-      <h2>Scan QR Code</h2>
-      <QrReader
-        delay={300}
-        style={{ width: "100%" }}
-        onScan={handleScan}
-        onError={(err) => console.error("Scanner Error:", err)}
-      />
-      {scanResult && (
-        <div>
-          <h3>Scanned Student:</h3>
-          <p><strong>ID:</strong> {scanResult.id}</p>
-          <p><strong>Name:</strong> {scanResult.name}</p>
-          <p><strong>Class:</strong> {scanResult.class}</p>
-          <p><strong>Points:</strong> {scanResult.points}</p>
-        </div>
-      )}
+      <h2>{message}</h2>
     </div>
   );
 };

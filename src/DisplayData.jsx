@@ -22,7 +22,7 @@ const DisplayData = () => {
   }, []);
 
   return (
-    <div className='px-5'>
+    <div className='px-5 container-fluid'>
       <h2>Student Records</h2>
       <table border="1" cellPadding="10">
         <thead>
@@ -36,15 +36,16 @@ const DisplayData = () => {
           </tr>
         </thead>
         <tbody>
-          {students.map((student) => (
+          {students.map((student,index) => (
             <tr key={student.id}>
+              <td>{index+1}.</td>
               <td>{student.name}</td>
               <td>{student.class}</td>
               <td>{student.points}</td>
               <td>
                 <QRCodeCanvas 
-                  value={JSON.stringify({ id: student.id, name: student.name, class: student.class, points: student.points })} 
-                  size={100} 
+                  value={`https://yourwebsite.com/scan?id=${student.id}`}             
+                  size={75} 
                 />
               </td>
               <td>
