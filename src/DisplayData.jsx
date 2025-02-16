@@ -21,6 +21,8 @@ const DisplayData = () => {
     });
   }, []);
 
+  let i = 0;
+
   return (
     <div className='px-5 container-fluid'>
       <h2>Student Records</h2>
