@@ -1,0 +1,16 @@
+.hover-link {
+    display: block; 
+    padding: 5px 5px !important; /* Adjust spacing as needed */
+    border-radius: 5px; /* Optional: Rounded corners */
+    transition: background-color 0.3s, color 0.3s; 
+}
+
+.hover-link:hover {
+    background-color: black;
+    color: white !important;
+}
+.sticky-navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000; 
+}
