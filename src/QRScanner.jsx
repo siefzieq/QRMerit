@@ -56,6 +56,11 @@ const QRScanner = () => {
       <Scanner
         onResult={handleScan}
         onError={(error) => console.error("Scanner Error:", error?.message)}
+        constraints={{
+          video: {
+            facingMode: "environment", // Uses rear camera
+          },
+        }}
       />
     </div>
   );
