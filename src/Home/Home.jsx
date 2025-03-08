@@ -25,16 +25,8 @@ const DisplayData = () => {
   return (
     <Container className='container-fluid'>
       <div className='home my-5 pt-3'>
-        <h2 className='fs-2'>Rekod SSDM Pelajar</h2>
+        <h2 className='fs-2'>QRMerit 6 Pintar</h2>
         <p className='pb-3' style={{fontSize:'1.2rem'}}>Sekolah Kebangsaan Taman Rasah Jaya</p>
-        <div className='d-flex justify-content-end'>
-          <Form.Select className='mb-4 border-dark' style={{width:'10%'}}>
-            <option selected disabled>Kelas</option>
-            <option value="6-Pintar">6 Pintar</option>
-            <option value="6-Arif">6 Arif</option>
-            <option value="4-Arif">4 Arif</option>
-          </Form.Select>
-        </div>
         <div className='table-responsive'>
         <table border="1" cellPadding="10" className="table table-bordered border-dark w-100 justify-content-center">
           <thead className='py-3 text-center'>
