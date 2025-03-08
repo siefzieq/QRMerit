@@ -55,7 +55,7 @@ const DisplayData = () => {
                 <td>{student.points}</td>
                 <td>
                   <QRCodeCanvas 
-                    value={`https://qrmerit.netlify.app//scan?id=${student.id}`}         
+                    value={`https://qrmerit.netlify.app/scan?id=${student.id}`}         
                     size={60} 
                   />
                 </td>
