@@ -1,11 +1,21 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { db, ref, get, update } from "./firebase";
 import { Scanner } from "@yudiel/react-qr-scanner";
 
 const QRScanner = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [message, setMessage] = useState("Scan a QR Code to update points.");
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const studentId = params.get("id");
+
+    if (studentId) {
+      handleUpdatePoints(studentId);
+    }
+  }, [location.search]);
 
   const handleScan = async (text) => {
     console.log("📸 Scanned QR Code:", text);
@@ -23,6 +33,10 @@ const QRScanner = () => {
       return;
     }
 
+    handleUpdatePoints(studentId);
+  };
+
+  const handleUpdatePoints = async (studentId) => {
     try {
       console.log(`🔍 Fetching student: ${studentId}`);
       const studentRef = ref(db, `students/${studentId}`);
@@ -38,20 +52,22 @@ const QRScanner = () => {
         await update(studentRef, { points: newPoints });
         console.log("✅ Points successfully updated!");
 
-        setMessage(`✅ Points updated! ${studentData.name} now has ${newPoints} points.`);
-        setTimeout(() => navigate("/"), 3000);
+        alert(`✅ 5 points added successfully for ${studentData.name}!`);
+        navigate("/"); // Redirect to home after alert
       } else {
         console.log("❌ Student not found in Firebase!");
-        setMessage("❌ Student not found!");
+        alert("❌ Student not found!");
+        navigate("/");
       }
     } catch (error) {
       console.error("❌ Error updating points:", error);
-      setMessage("❌ Error updating points!");
+      alert("❌ Error updating points!");
+      navigate("/");
     }
   };
 
   return (
-    <div className="d-flex flex-column align-items-center justify-content-center vh-100">
+    <>
       <h2>{message}</h2>
       <Scanner
         onResult={handleScan}
@@ -62,7 +78,7 @@ const QRScanner = () => {
           },
         }}
       />
-    </div>
+    </>
   );
 };
 
